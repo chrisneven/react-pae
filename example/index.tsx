@@ -1,14 +1,33 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Thing } from '../.';
+import propsAreEqual from 'react-pae';
 
-const App = () => {
+interface Props {
+  date: Date;
+  onClick: () => void;
+  bookings: Array<{ startDate: Date; endDate: Date }>;
+}
+
+const Month = (props: Props) => {
   return (
     <div>
-      <Thing />
+      {props.date.getMonth()}
+      <button onClick={props.onClick}>open month</button>
     </div>
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default React.memo(
+  Month,
+  propsAreEqual<Props>({
+    date: (prev, next) => +prev === +next,
+    onClick: 'skip',
+    bookings: 'deep',
+  })
+);
+
+ReactDOM.render(
+  <Month bookings={[]} date={new Date()} onClick={() => alert('hey')} />,
+  document.getElementById('root')
+);
