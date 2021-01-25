@@ -1,12 +1,16 @@
 # React-pae
 
 [![npm version](https://badge.fury.io/js/react-pae.svg)](https://badge.fury.io/js/react-pae)
+
+React-pae is a very tiny util that can help you create "arePropsEqual" functions with ease. 
 ## Features
 
 - TypesScript support for strict type checking when comparing props
-- Very small library (16kb packed!)
-- BYOC (Bring Your Own Comparer). Determine for yourself how props should be compared
+- Very small library, but saves you code
+- Support for shallow, deep and skipping equality checks
+- BYOC (Bring Your Own Comparer). Determine for yourself how props should be compared.
 - Actually works with any `(prev, next) => boolean` callback
+- Combine multiple "settings".
 
 ## Quick start
 
@@ -22,14 +26,17 @@ npm i --save react-pae
 
 ### Example
 
-Imagine we have this heavy month component from which its usage is simplified in the code sample below. 
+Imagine we have this heavy month component from which its usage is simplified in the code sample below. It probably exists in a calendar component that has a lot of interactions hypothetically.
 
 ```tsx
+import propsAreEqual from 'react-pae';
+
 const Month = props => {
   return (
     <div>
       {props.date.getMonth()}
       <button onClick={props.onClick}>open month</button>
+      {children}
     </div>
   );
 };
@@ -38,8 +45,13 @@ export default React.memo(
   Month,
   propsAreEqual({
     date: (prev, next) => +prev === +next,
+    // BYOC, we created our own comparer as direct date comparisons (new Date() !== new Date()) don't work
     onClick: 'skip',
+    // simple callback which is always of the same shape
     bookings: 'deep',
+    // an array, but shallowly [] === [] = false, that's why we check it "deeply"
+    // 
+    // all other props are checked shallowly as you'd expect with solely using `React.memo()`
   })
 );
 ```
