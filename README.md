@@ -44,13 +44,13 @@ const Month = props => {
 export default React.memo(
   Month,
   propsAreEqual({
+    // BYOC, we can create our own comparer as direct date comparisons (new Date() !== new Date()) don't work
     date: (prev, next) => +prev === +next,
-    // BYOC, we created our own comparer as direct date comparisons (new Date() !== new Date()) don't work
-    onClick: 'skip',
     // simple callback which is always of the same shape
-    bookings: 'deep',
+    onClick: 'skip',
     // an array, but shallowly [] === [] = false, that's why we check it "deeply"
-    // 
+    bookings: 'deep',
+
     // all other props are checked shallowly as you'd expect with solely using `React.memo()`
   })
 );
