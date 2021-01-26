@@ -35,6 +35,7 @@
   },
   "name": "react-pae",
   "author": "Chris Neven",
+  "repository": "https://github.com/chrisneven/react-pae",
   "module": "dist/react-pae.esm.js",
   "size-limit": [
     {
